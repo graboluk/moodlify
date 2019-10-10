@@ -1,0 +1,52 @@
+\provideboolean{theno_parts}
+\setboolean{theno_parts}{true}
+
+\provideboolean{theshowinfo}
+\setboolean{theshowinfo}{false}
+
+\newcommand{\showinfo}{\setboolean{theshowinfo}{true}}
+
+\newcommand{\gooditem}{
+    \ifthenelse{\boolean{theshowinfo}}{%
+        \item {\color{olive}(Correct)}
+    }{%
+        \item
+    }
+}
+
+\newcommand{\bad}[1][(a)]{%
+    \ifthenelse{\boolean{theno_parts}}{%
+        \begin{enumerate}[#1]%
+            \item
+    }{%
+        \item
+    }
+    \setboolean{theno_parts}{false}%
+}
+
+\newcommand{\good}[1][(a)]{%
+    \ifthenelse{\boolean{theno_parts}}{%
+        \begin{enumerate}[#1]%
+            \gooditem
+    }{%
+        \gooditem
+    }
+    \setboolean{theno_parts}{false}%
+}
+
+
+\newcommand{\trap}{%
+    \ifthenelse{\boolean{theno_parts}}{}{%
+        \end{enumerate}
+    }
+    \setboolean{theno_parts}{true}
+}
+
+\newenvironment{problem}{\paragraph{Problem}}{\trap}
+
+\newcommand{\moodlecat}[1]{%
+    \ifthenelse{\boolean{theshowinfo}}{%
+        \section*{Questions for moodle category: #1}
+    }{}%
+}
+
