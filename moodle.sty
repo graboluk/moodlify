@@ -1,10 +1,41 @@
+\newcommand{\addstroption}[2][]{%
+    \expandafter\providecommand\csname the#2\endcsname{%
+        #1%
+    }
+    \expandafter\providecommand\csname #2\endcsname[1]{%
+        \expandafter\renewcommand\csname the#2\endcsname{%
+            ##1%
+        }
+    }
+}
+
+
+\addstroption[1in]{margins}
+
 \provideboolean{theno_parts}
 \setboolean{theno_parts}{true}
+
+\newcounter{problemcounter}
+
 
 \provideboolean{theshowinfo}
 \setboolean{theshowinfo}{false}
 
 \newcommand{\showinfo}{\setboolean{theshowinfo}{true}}
+
+\newcommand{\tutma}[1]{%
+    \ifthenelse{\boolean{theshowinfo}}{%
+        \begin{mdframed}[%
+                linewidth=0.2em, 
+                topline=false, 
+                bottomline=false, 
+                rightline=false,
+                leftline=true,
+            ]
+        #1
+        \end{mdframed}
+    }{}%
+}
 
 \newcommand{\gooditem}{
     \ifthenelse{\boolean{theshowinfo}}{%
@@ -42,7 +73,7 @@
     \setboolean{theno_parts}{true}
 }
 
-\newenvironment{problem}{\paragraph{Problem}}{\trap}
+\newenvironment{problem}{\paragraph{Problem~\arabic{problemcounter}}\stepcounter{problemcounter}}{\trap}
 
 \newcommand{\moodlecat}[1]{%
     \ifthenelse{\boolean{theshowinfo}}{%
@@ -50,3 +81,5 @@
     }{}%
 }
 
+
+\newgeometry{margin=\themargins}

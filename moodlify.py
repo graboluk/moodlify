@@ -1,4 +1,5 @@
 #!/bin/python3
+#! Copyrights Łukasz Grabowski
 
 import yaml
 import sys, os, re
@@ -28,7 +29,7 @@ def apply_newcommand(old, new, txt):
     return txt.replace(old,new)
     
 
-def apply_newcommands(newcommands, txt): # naively apply them for as long as we can - this will work fine on a legal latex source, but will potentitally enter an infinte loop on an illegal latex source
+def apply_newcommands(newcommands, txt): # naivelyn apply them for as long as we can - this will work fine on a legal latex source, but will potentitally enter an infinte loop on an illegal latex source
     # ~ print(newcommands)
     ntxt = txt
     allmacros=latexio.get_all_macros(ntxt)
@@ -54,6 +55,8 @@ def serialise_problem_content(nodes,nltoken, bracetokenl,bracetokenr,equaltoken,
                 # ~ print("not answers_started")
                 answers_started = True
             ret = ret+nltoken + (tildetoken if m["macro_name"]=="bad" else equaltoken)
+        elif m["node_type"] == "macro" and m["macro_name"] == "tutma":
+            pass
         else: ret = ret + latexio.serialize_node(m,nltoken)
     ret = ret + nltoken + bracetokenr
     ret = ret.replace("\\{","\\lbrace")
@@ -70,7 +73,7 @@ def serialise_problem_content(nodes,nltoken, bracetokenl,bracetokenr,equaltoken,
 
 
 def moodlify(txt): #replace { with \{, etc.
-    nodes = latexio.txt2nodes(txt,macros=[["\\good","\\bad"],["\\moodlecat"]])
+    nodes = latexio.txt2nodes(txt,macros=[["\\good","\\bad"],["\\moodlecat","\\tutma"]])
 
     output = ""
 
@@ -103,11 +106,21 @@ def moodlify(txt): #replace { with \{, etc.
 
     return output
 
+
+
 def extract_moodle_content(txt):
 
-    nodes = latexio.txt2nodes(txt,macros=[[],["\\moodlecat",]])
+    nodes = latexio.txt2nodes(txt,macros=[[],["\\moodlecat","\\tutma"]])
 
     mynodes = [m for m in nodes if (m["node_type"] =="macro" and  m["macro_name"] == "moodlecat") or (m["node_type"] == "env" and m["env_name"] == "problem")]
+
+    # ~ for m in mynodes:
+        # ~ if (m["node_type"] == "env" and m["env_name"] == "problem"):
+            # ~ for 
+    
+            # ~ remove_tutma(m)
+
+
 
     output = ""
     nltoken = latexio.randomword(10)
